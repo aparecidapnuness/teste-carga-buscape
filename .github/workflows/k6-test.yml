@@ -1,0 +1,24 @@
+name: Teste de Carga com K6
+
+on:
+  workflow_dispatch: # permite rodar manualmente no GitHub
+
+jobs:
+  k6:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar K6
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg software-properties-common
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt update
+          sudo apt install -y k6
+
+      - name: Executar teste de carga
+        run: k6 run teste-buscape.js
